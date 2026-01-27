@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 import subprocess
 from datetime import datetime
+import time
 
 current_time = datetime.now().strftime('%d-%m-%Y %X')
 
@@ -53,10 +54,54 @@ def display_cpu_usage():
         print("CPU Usage is Not Available")
     print()
 
+# TODO Get the memory usage data from the system
+def get_memory_usage():
+    try:
+        result = subprocess.run(
+            args=['free', '-m'],
+            capture_output=True,
+            text=True
+        ).stdout
+
+        rows = result.split("\n")
+        mem_line = rows[1].split()
+        total = int(mem_line[1])
+        used = int(mem_line[2])
+        percentage = (used / total) * 100
+
+        return {
+            'total': total,
+            'used': used,
+            'percentage': int(percentage)
+        }
+    except Exception as e:
+        print(f"Error getting memory usage : {e}")
+        return None
+
+
+# Todo Display and format the usage
+
+def display_memory_usage():
+    memory = get_memory_usage()
+    if memory is not None:
+        print(f"Memory Usage: {memory['used']} MB / {memory['total']} MB ({memory['percentage']}%)")
+        usage_percentage = memory['percentage']
+        if usage_percentage > 85:
+            print("⚠️ High memory usage! ")
+        elif usage_percentage >= 60:
+            print("⚡ Memory usage is moderate")
+        else:
+            print("👍 Memory usage is normal")
+    else:
+        print("Memory Usage is Not Available")
+    print()
+
 def main():
     header()
     print("Starting system check...")
+    time.sleep(2)
     display_cpu_usage()
+    display_memory_usage()
     
  
 if __name__ == '__main__':
