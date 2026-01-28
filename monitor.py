@@ -96,6 +96,37 @@ def display_memory_usage():
         print("Memory Usage is Not Available")
     print()
 
+# Todo Get and display the disk usage 
+
+def get_disk_usage():
+    try:
+        result = subprocess.run(
+            args=['df', '-h','/'],
+            capture_output=True,
+            text=True
+        ).stdout
+
+        rows = result.split('\n')
+        filesystem = rows[1].split()
+        size = filesystem[1]
+        used = filesystem[2]
+        available = filesystem[3]
+        percentage = int(filesystem[-2].split('%')[0])
+
+        disk = {
+            'size' : size,
+            'used' : used,
+            'available' : available,
+            'percentage' : percentage
+        }
+
+        return disk
+
+    except Exception as e:
+        print(f'Disk usage is not available due to {e}')
+        return None
+
+
 def main():
     header()
     print("Starting system check...")
