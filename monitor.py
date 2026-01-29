@@ -151,6 +151,7 @@ def main():
     display_cpu_usage()
     display_memory_usage()
     display_disk_usage()
+    print('=' * 50)
     
  
 if __name__ == '__main__':
