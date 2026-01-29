@@ -101,6 +101,7 @@ def display_memory_usage():
 def get_disk_usage():
     try:
         result = subprocess.run(
+            # Add the / to return the root
             args=['df', '-h','/'],
             capture_output=True,
             text=True
@@ -126,6 +127,22 @@ def get_disk_usage():
         print(f'Disk usage is not available due to {e}')
         return None
 
+def display_disk_usage():
+    disk = get_disk_usage()
+    if disk is not None:
+        print(f"Disk usage: {disk['used']} / {disk['size']} ({disk['percentage']}%)")
+        print(f"Disk Available: {disk['available']}")
+        percentage = disk['percentage']
+        if percentage >= 90:
+            print("⚠️ Disk space is low!")
+        elif percentage >= 75:
+            print("⚡ Disk space is moderate!")
+        else:
+            print("👍 Disk space is low!")
+
+    else:
+        print("😥 Unable to retrieve disk storage")
+    print()
 
 def main():
     header()
@@ -133,6 +150,7 @@ def main():
     time.sleep(2)
     display_cpu_usage()
     display_memory_usage()
+    display_disk_usage()
     
  
 if __name__ == '__main__':
