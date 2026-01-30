@@ -56,6 +56,3 @@ chmod +x monitor.py
 
 Dunsin Fayode
 
-## License
-
-MIT
